@@ -6,7 +6,6 @@ Instructions
 Unit tests are in the package src/test/java
 Please right-click and Run as Junit Test (Might differ from IDE to IDE. I have used RAD)
 
-Solution Overview
 
 Assumptions
 1. DB has a table UNHEALTHY_SERVICES. Alerts sent and all their details are stored in this table.
@@ -15,7 +14,7 @@ Assumptions
 4. Time of the Alert sent is stored in this table. It is used to find out if the alert were sent 15 minutes ago or more. Timeout function.
 5. The timer service runs every minute to check which alerts have timed out and got no acknowledgements.
 
-Services
+Solution Overview
 1. Service to send alerts accepts request from all the services and timer service too. When a request reaches this service, it checks if an alert entry for the same service is existing in db. 
         If not, it fetches the targets of Level_A (first escalation level), adds a new alert entry in DB and sends emails and/or sms to the targets. 
         If yes, it fetches the entry from DB and check for it's alert time. 
@@ -27,4 +26,6 @@ Services
 3. Service to receive acknowledgement request from web. When the service receives this request, it update the DB and sets the isAcknowledged flag to true for that service.
 
 4. Service to handle timer request. HandleTimer service receives request from the Timer service. It queries DB for all the entries with FALSE value for isAcknowledged flag. Then it checks which ones are timed out. Gets a list of entries. Calls the Service 1 to send alerts for all those services which are timed out.
+
+5. I have used PagerDomainUtil class for sample data. For example, when add method is called for the DB, I've used sample data as a response from DB.
 
